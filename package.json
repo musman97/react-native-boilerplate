@@ -1,0 +1,19 @@
+{
+    "name": "@musman97/react-native-boilerplate",
+    "version": "1.0.0",
+    "description": "Muhamamd Usman's React Native Boilerplate",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/musman97/react-native-boilerplate.git"
+    },
+    "author": "Muhammad Usman <zahoor.usman.m@gmail.com>",
+    "license": "MIT",
+    "main": "post-init.script.js",
+    "keywords": [
+        "react",
+        "native",
+        "boilerplate",
+        "react-native",
+        "starter-kit"
+    ]
+}
