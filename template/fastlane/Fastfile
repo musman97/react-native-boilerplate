@@ -1,0 +1,78 @@
+def create_android_bundle
+  sh "npx mkdirp '../android/app/src/main/assets' '../android/app/src/main/res/raw'"
+  sh 'rm -f ../android/app/src/main/assets/index.android.*'
+  sh 'yarn android:bundle'
+end
+
+def create_ios_bundle
+  sh 'rm -f ../ios/main.jsbundle'
+  sh 'yarn ios:bundle'
+end
+
+def create_debug_apk
+  UI.message 'Creating bundle'
+  create_android_bundle
+
+  UI.message 'Cleaning android resources'
+  sh 'rm -R ../android/app/src/main/res/drawable-* ../android/app/src/main/res/raw'
+
+  UI.message 'Cleaning build'
+  gradle(task: 'clean', project_dir: './android')
+
+  UI.message 'Creating debug apk'
+  gradle(task: 'assembleDebug', project_dir: './android')
+end
+
+def create_release_apk
+  UI.message 'Cleaning build'
+  gradle(task: 'clean', project_dir: './android')
+
+  UI.message 'Creating release apk'
+  gradle(task: 'assembleRelease', project_dir: './android', properties: {
+           KEY_STORE_FILE: ENV['KEY_STORE_FILE'],
+           KEY_STORE_ALIAS: ENV['KEY_STORE_ALIAS'],
+           KEY_STORE_PASSWORD: ENV['KEY_STORE_PASSWORD']
+         })
+end
+
+def create_release_aab
+  UI.message 'Cleaning build'
+  gradle(task: 'clean', project_dir: './android')
+
+  UI.message 'Creating release aab'
+  gradle(task: 'bundleRelease', project_dir: './android', properties: {
+           KEY_STORE_FILE: ENV['KEY_STORE_FILE'],
+           KEY_STORE_ALIAS: ENV['KEY_STORE_ALIAS'],
+           KEY_STORE_PASSWORD: ENV['KEY_STORE_PASSWORD']
+         })
+end
+
+def copy_android_apk_to_desktop
+  UI.message 'Copying generated artifact to Desktop'
+  sh "cp #{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]} ~/Desktop"
+end
+
+def copy_android_aab_to_desktop
+  UI.message 'Copying generated artifact to Desktop'
+  sh "cp #{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]} ~/Desktop"
+end
+
+platform :android do
+  desc "Build debug apk and copy it to user's desktop"
+  lane :debug_apk do
+    create_debug_apk
+    copy_android_apk_to_desktop
+  end
+
+  desc "Build release apk and copy it to user's desktop"
+  lane :release_apk do
+    create_release_apk
+    copy_android_apk_to_desktop
+  end
+
+  desc "Build release aab and copy it to user's desktop"
+  lane :release_aab do
+    create_release_aab
+    copy_android_aab_to_desktop
+  end
+end

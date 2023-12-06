@@ -1,0 +1,26 @@
+{
+    "name": "@musman97/react-native-boilerplate",
+    "version": "1.1.0",
+    "description": "Muhamamd Usman's React Native Boilerplate with Zustand and React Query",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/musman97/react-native-boilerplate.git"
+    },
+    "author": "Muhammad Usman <zahoor.usman.m@gmail.com>",
+    "license": "MIT",
+    "main": "post-init.script.js",
+    "keywords": [
+        "react",
+        "native",
+        "boilerplate",
+        "react-native",
+        "starter-kit"
+    ],
+    "bugs": {
+        "url": "https://github.com/musman97/react-native-boilerplate/issues"
+    },
+    "homepage": "https://github.com/musman97/react-native-boilerplate#readme",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    }
+}
