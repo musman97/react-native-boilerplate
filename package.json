@@ -15,5 +15,12 @@
         "boilerplate",
         "react-native",
         "starter-kit"
-    ]
+    ],
+    "bugs": {
+        "url": "https://github.com/musman97/react-native-boilerplate/issues"
+    },
+    "homepage": "https://github.com/musman97/react-native-boilerplate#readme",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    }
 }
