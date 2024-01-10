@@ -1,0 +1,20 @@
+name: Publish Package to npmjs
+on:
+    push:
+        tags:
+            - "v*.*.*"
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            # Setup .npmrc file to publish to npm
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: "20.x"
+                  registry-url: "https://registry.npmjs.org"
+                  # Defaults to the user or organization that owns the workflow file
+            - run: yarn
+            - run: npm publish --dry-run // for Yarn version 1, use `yarn publish` instead
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
