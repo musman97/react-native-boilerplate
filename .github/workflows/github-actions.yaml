@@ -18,5 +18,5 @@ jobs:
 
             - uses: JS-DevTools/npm-publish@v3.0.1
               with:
-                  token: ${{ secrets.NPM_TOKEN }}
+                  # token: ${{ secrets.NPM_TOKEN }}
                   dry-run: true
