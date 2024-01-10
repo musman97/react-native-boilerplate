@@ -1,6 +1,8 @@
 name: Publish Package to npmjs
 on:
     push:
+        branches:
+            - "task/cicd"
         tags:
             - "v*.*.*"
 jobs:
