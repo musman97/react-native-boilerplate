@@ -15,6 +15,8 @@ jobs:
                   registry-url: "https://registry.npmjs.org"
                   # Defaults to the user or organization that owns the workflow file
             - run: yarn
-            - run: npm publish --dry-run // for Yarn version 1, use `yarn publish` instead
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - uses: JS-DevTools/npm-publish@v3.0.1
+              with:
+                  token: ${{ secrets.NPM_TOKEN }}
+                  dry-run: true
