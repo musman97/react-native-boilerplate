@@ -1,12 +1,16 @@
 name: Publish Package to npmjs
 on:
-    push:
+    pull_request:
+        types:
+            - closed
         branches:
-            - "task/cicd"
+            - "main-test"
         tags:
             - "v*.*.*"
+
 jobs:
-    build:
+    build-and-publish:
+        if: github.event.pull_request.merged == true
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
