@@ -1,14 +1,10 @@
-import {
-  createApiSuccessResult,
-  doApiRequestWithBody,
-  handlerError,
-} from '../common';
+import {createApiSuccessResult, makeApiRequest, handlerError} from '../common';
 import {ApiEndpoints, HttpMethod} from '../constants';
 import type {LoginApiResponse} from './types';
 
 export const UserApiService = {
-  async doLogin(email: string, password: string) {
-    const loginRes = await doApiRequestWithBody<
+  async login(email: string, password: string) {
+    const loginRes = await makeApiRequest<
       {email: string; password: string},
       LoginApiResponse
     >({
