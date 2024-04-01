@@ -142,7 +142,7 @@ export function doDelete<R, D>(requestConfig: ApiRequestConfig<D>) {
   return axios.delete<unknown, R>(requestConfig.endpoint, config);
 }
 
-async function _doApiRequest<D, R>(
+async function _makeApiRequest<D, R>(
   requestConfig: ApiRequestConfig<D>,
   errorHandler?: CustomErrorHandler,
 ): Promise<ApiResult<R>> {
@@ -175,15 +175,10 @@ async function _doApiRequest<D, R>(
   }
 }
 
-export const doApiRequest = <R extends GeneralApiResponse = GeneralApiResponse>(
-  requestConfig: ApiRequestConfig<undefined>,
-  errorHandler?: CustomErrorHandler,
-) => _doApiRequest<undefined, R>(requestConfig, errorHandler);
-
-export const doApiRequestWithBody = <
-  D,
+export const makeApiRequest = <
+  D = undefined,
   R extends GeneralApiResponse = GeneralApiResponse,
 >(
   requestConfig: ApiRequestConfig<D>,
   errorHandler?: CustomErrorHandler,
-) => _doApiRequest<D, R>(requestConfig, errorHandler);
+) => _makeApiRequest<D, R>(requestConfig, errorHandler);
