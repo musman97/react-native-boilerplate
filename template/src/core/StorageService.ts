@@ -1,8 +1,14 @@
 import {MMKV} from 'react-native-mmkv';
+import {
+  getGenericPassword,
+  resetGenericPassword,
+  setGenericPassword,
+} from 'react-native-keychain';
 import {initializeMMKVFlipper} from 'react-native-mmkv-flipper-plugin';
 import {SuccessResult, FailureResult} from '~/types';
 import {isError} from '~/utils';
 
+const AccessTokenKey = 'user/access_token';
 const storage = new MMKV();
 
 if (__DEV__) {
@@ -54,6 +60,45 @@ enum StorageKey {
 
 export const StorageService = {
   Keys: StorageKey,
+
+  /**
+   * Implementation inspired from:
+   * https://github.com/oblador/react-native-keychain/issues/291#issuecomment-682460091
+   */
+
+  async setAccessToken(accessToken: string) {
+    try {
+      await setGenericPassword('jwtToken', accessToken, {
+        service: AccessTokenKey,
+      });
+    } catch (error) {
+      return handleError(error, 'Unable to set access token to keychain');
+    }
+  },
+  async getAccessToken() {
+    try {
+      const creds = await getGenericPassword({service: AccessTokenKey});
+
+      if (creds) {
+        return creds.password;
+      } else {
+        return createStorageSuccessResult({data: null});
+      }
+    } catch (error) {
+      return handleError(error, 'Unable to get access token from keychain');
+    }
+  },
+  async clearAccessToken() {
+    try {
+      const success = await resetGenericPassword({service: AccessTokenKey});
+
+      if (!success) {
+        throw new Error('Promise was resolved to false');
+      }
+    } catch (error) {
+      return handleError(error, 'Unable to clear access token from keychain');
+    }
+  },
 
   setString(key: StorageKey, value: string) {
     try {
