@@ -176,8 +176,8 @@ async function _makeApiRequest<D, R>(
 }
 
 export const makeApiRequest = <
-  D = undefined,
   R extends GeneralApiResponse = GeneralApiResponse,
+  D = undefined,
 >(
   requestConfig: ApiRequestConfig<D>,
   errorHandler?: CustomErrorHandler,
