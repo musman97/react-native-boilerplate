@@ -1,13 +1,10 @@
-import {createApiSuccessResult, makeApiRequest, handlerError} from '../common';
+import {makeApiRequest} from '../common';
 import {ApiEndpoints, HttpMethod} from '../constants';
 import type {LoginApiResponse} from './types';
 
 export const UserApiService = {
-  async login(email: string, password: string) {
-    const loginRes = await makeApiRequest<
-      {email: string; password: string},
-      LoginApiResponse
-    >({
+  login: (email: string, password: string) =>
+    makeApiRequest<LoginApiResponse, {email: string; password: string}>({
       endpoint: ApiEndpoints.User.Login,
       method: HttpMethod.Post,
       withAuth: false,
@@ -15,12 +12,5 @@ export const UserApiService = {
         email,
         password,
       },
-    });
-
-    if (loginRes.success) {
-      return createApiSuccessResult({data: loginRes.data?.data});
-    } else {
-      return handlerError(loginRes);
-    }
-  },
+    }),
 };
