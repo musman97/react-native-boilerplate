@@ -4,16 +4,11 @@ import {
   resetGenericPassword,
   setGenericPassword,
 } from 'react-native-keychain';
-import {initializeMMKVFlipper} from 'react-native-mmkv-flipper-plugin';
 import {SuccessResult, FailureResult} from '~/types';
 import {isError} from '~/utils';
 
 const AccessTokenKey = 'user/access_token';
 const storage = new MMKV();
-
-if (__DEV__) {
-  initializeMMKVFlipper({default: storage});
-}
 
 const GeneralErrorMessage = 'Unable to set/get value to/from Local storage';
 
