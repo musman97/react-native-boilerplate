@@ -35,3 +35,5 @@ export const ApiEndpoints = {
 };
 
 export const BaseUrl = BaseUrls[SelectedAppEnv];
+
+export const NetworkErrorMessage = 'Network Error';
