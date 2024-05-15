@@ -17,7 +17,7 @@ const formatErrorMessage = (key: string, type: 'set' | 'get', value?: any) =>
     ? `Unable to get for key: ${key}`
     : `Unable to set value: ${value} for key: ${key}`;
 
-export type StorageSuccessResult<D = undefined> = SuccessResult<D>;
+export type StorageSuccessResult<D> = SuccessResult<D, never>;
 
 export type StorageFailureResult<E = Error | undefined> = Omit<
   FailureResult<undefined, E>,
@@ -25,27 +25,30 @@ export type StorageFailureResult<E = Error | undefined> = Omit<
 >;
 
 const createStorageSuccessResult = <D = undefined>(
-  result?: Partial<StorageSuccessResult<D>>,
+  data?: D,
 ): StorageSuccessResult<D> => ({
   success: true,
   failure: false,
-  data: result?.data,
+  cause: null,
+  data,
 });
 
 const createStorageFailureResult = <E>(
-  result?: Partial<StorageFailureResult<E>>,
+  message?: string,
+  cause?: E,
 ): StorageFailureResult<E> => ({
   success: false,
   failure: true,
-  message: result?.message ?? GeneralErrorMessage,
-  cause: result?.cause,
+  data: null,
+  message: message ?? GeneralErrorMessage,
+  cause,
 });
 
 const handleError = (error: unknown, message: string): StorageFailureResult => {
   if (isError(error)) {
-    return createStorageFailureResult({cause: error, message});
+    return createStorageFailureResult(message, error);
   } else {
-    return createStorageFailureResult({message});
+    return createStorageFailureResult(message);
   }
 };
 

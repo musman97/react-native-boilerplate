@@ -13,7 +13,9 @@ export type ApiRequestConfig<D> = D extends undefined
   ? ApiRequestConfigBase & {data?: D}
   : ApiRequestConfigBase & {data: D};
 
-export type ApiSuccessResult<D> = SuccessResult<D> & {code: number};
+export type ApiSuccessResult<D> = SuccessResult<D, number> & {
+  code: number;
+};
 
 export type ApiFailureResult = FailureResult<
   number,
