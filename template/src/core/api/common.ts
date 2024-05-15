@@ -53,13 +53,15 @@ function createRequestConfig<D>(requestConfig: ApiRequestConfig<D>) {
   return axiosReqConfig;
 }
 
-export const createApiSuccessResult = <D = undefined>(
-  result?: Partial<ApiSuccessResult<D>>,
+export const createApiSuccessResult = <D>(
+  data: D,
+  code: number = 200,
 ): ApiSuccessResult<D> => ({
   success: true,
   failure: false,
-  code: result?.code ?? 200,
-  data: result?.data,
+  code: code ?? 200,
+  data,
+  cause: null,
 });
 
 export const createApiFailureResult = (
@@ -67,6 +69,7 @@ export const createApiFailureResult = (
 ): ApiFailureResult => ({
   success: false,
   failure: true,
+  data: null,
   message: result?.message ?? ApiErrorMessage.General,
   code: result?.code ?? -1,
   cause: result?.cause,
@@ -173,7 +176,7 @@ async function _makeApiRequest<D, R>(
         throw new Error('Invalid Http Method');
     }
 
-    return createApiSuccessResult({data});
+    return createApiSuccessResult(data);
   } catch (error) {
     return errorHandler ? errorHandler(error) : handlerError(error);
   }
