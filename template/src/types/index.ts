@@ -1,7 +1,7 @@
 export interface SuccessResult<D, C> {
   success: true;
   failure: false;
-  data?: D;
+  value?: D;
   code?: C;
   cause: null;
 }
@@ -10,7 +10,7 @@ export interface FailureResult<C, E> {
   success: false;
   failure: true;
   message: string;
-  data: null;
+  value: null;
   code: C;
   cause?: E;
 }

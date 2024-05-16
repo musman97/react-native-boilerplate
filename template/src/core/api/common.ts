@@ -60,7 +60,7 @@ export const createApiSuccessResult = <D>(
   success: true,
   failure: false,
   code: code ?? 200,
-  data,
+  value: data,
   cause: null,
 });
 
@@ -69,7 +69,7 @@ export const createApiFailureResult = (
 ): ApiFailureResult => ({
   success: false,
   failure: true,
-  data: null,
+  value: null,
   message: result?.message ?? ApiErrorMessage.General,
   code: result?.code ?? -1,
   cause: result?.cause,

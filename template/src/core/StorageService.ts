@@ -30,7 +30,7 @@ const createStorageSuccessResult = <D = undefined>(
   success: true,
   failure: false,
   cause: null,
-  data,
+  value: data,
 });
 
 const createStorageFailureResult = <E>(
@@ -39,7 +39,7 @@ const createStorageFailureResult = <E>(
 ): StorageFailureResult<E> => ({
   success: false,
   failure: true,
-  data: null,
+  value: null,
   message: message ?? GeneralErrorMessage,
   cause,
 });
