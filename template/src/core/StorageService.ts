@@ -8,7 +8,7 @@ import {SuccessResult, FailureResult} from '~/types';
 import {isError} from '~/utils';
 
 const AccessTokenKey = 'user/access_token';
-const storage = new MMKV();
+export const storage = new MMKV();
 
 const GeneralErrorMessage = 'Unable to set/get value to/from Local storage';
 
