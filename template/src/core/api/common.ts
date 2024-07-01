@@ -1,17 +1,17 @@
-import Axios, {AxiosRequestConfig} from 'axios';
-import {ApiErrorMessage, HttpMethod, NetworkErrorMessage} from './constants';
-import {isError, isObjectNotEmpty} from '~/utils';
-import {BaseUrl} from './constants';
+import Axios from 'axios';
+import {useGlobalStore} from '~/state';
+import {BaseUrl, HttpMethod} from './constants';
 import {
-  ApiFailureResult,
   ApiRequestConfig,
   ApiResult,
-  ApiSuccessResult,
   CustomErrorHandler,
   GeneralApiResponse,
-  GeneralApiResponseData,
 } from './types';
-import {useGlobalStore} from '~/state';
+import {
+  createApiSuccessResult,
+  createRequestConfig,
+  handlerError,
+} from './utils';
 
 const axios = Axios.create({
   baseURL: BaseUrl,
@@ -39,78 +39,6 @@ axios.interceptors.request.use(req => {
   return req;
 });
 axios.interceptors.response.use(({data}) => data);
-
-function createRequestConfig<D>(requestConfig: ApiRequestConfig<D>) {
-  const axiosReqConfig: AxiosRequestConfig = {};
-
-  axiosReqConfig.withAuth = requestConfig.withAuth;
-  axiosReqConfig.accessToken = requestConfig.accessToken;
-
-  if (requestConfig.data && isObjectNotEmpty(requestConfig.data)) {
-    axiosReqConfig.data = requestConfig.data;
-  }
-
-  return axiosReqConfig;
-}
-
-export const createApiSuccessResult = <D>(
-  data: D,
-  code: number = 200,
-): ApiSuccessResult<D> => ({
-  success: true,
-  failure: false,
-  code: code ?? 200,
-  value: data,
-  cause: null,
-});
-
-export const createApiFailureResult = (
-  result?: Partial<ApiFailureResult>,
-): ApiFailureResult => ({
-  success: false,
-  failure: true,
-  value: null,
-  message: result?.message ?? ApiErrorMessage.General,
-  code: result?.code ?? -1,
-  cause: result?.cause,
-});
-
-export function handlerError(error: unknown): ApiFailureResult {
-  if (Axios.isAxiosError(error)) {
-    const failureResult = createApiFailureResult({cause: error});
-    const statusCode = error.response?.status;
-
-    /**
-     * Condition copied from
-     * https://github.com/infinitered/apisauce/blob/a9e015a1c6ae649dc521490c41d1054b091f6639/lib/apisauce.ts#L83
-     */
-    if (error.message === NetworkErrorMessage) {
-      failureResult.message = ApiErrorMessage.Network;
-      failureResult.code = 0;
-    } else if (statusCode) {
-      const data = error.response?.data as GeneralApiResponseData;
-      failureResult.message = data?.message || ApiErrorMessage.General;
-      failureResult.code = statusCode;
-    } else {
-      failureResult.message = ApiErrorMessage.UnableToSendRequest;
-      failureResult.code = -1;
-    }
-
-    return failureResult;
-  }
-  if (isError(error)) {
-    return createApiFailureResult({
-      message: ApiErrorMessage.UnableToSendRequest,
-      code: -1,
-      cause: error,
-    });
-  } else {
-    return createApiFailureResult({
-      message: ApiErrorMessage.UnableToSendRequest,
-      code: -1,
-    });
-  }
-}
 
 export function doGet<R, D>(requestConfig: ApiRequestConfig<D>) {
   const config = createRequestConfig(requestConfig);
