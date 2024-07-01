@@ -7,6 +7,7 @@ type ApiRequestConfigBase = {
   method: HttpMethod;
   withAuth: boolean;
   accessToken?: string;
+  query?: Record<string, string>;
 };
 
 export type ApiRequestConfig<D> = D extends undefined

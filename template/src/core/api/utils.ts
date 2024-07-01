@@ -11,6 +11,10 @@ import {
 export function createRequestConfig<D>(requestConfig: ApiRequestConfig<D>) {
   const axiosReqConfig: AxiosRequestConfig = {};
 
+  if (requestConfig.query) {
+    axiosReqConfig.params = requestConfig.query;
+  }
+
   axiosReqConfig.withAuth = requestConfig.withAuth;
   axiosReqConfig.accessToken = requestConfig.accessToken;
 
