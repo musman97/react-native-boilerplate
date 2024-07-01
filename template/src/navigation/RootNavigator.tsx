@@ -1,7 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
-import {defaultScreenOptions, RouteName} from './config';
+import {defaultScreenOptions} from './config';
+import {RouteName} from './routes';
 import {Login, Splash} from '~/screens';
 import {RootStackParamList} from './types';
 import {GlobalSelectors, useGlobalStore} from '~/state';

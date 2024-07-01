@@ -1,4 +1,4 @@
-import {RouteName} from './config';
+import {RouteName} from './routes';
 import RootNavigator from './RootNavigator';
 
 export default RootNavigator;
