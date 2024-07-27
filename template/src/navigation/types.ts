@@ -1,4 +1,4 @@
-import {RouteName} from './config';
+import {RouteName} from './routes';
 
 export type RootStackParamList = {
   [RouteName.Splash]: undefined;

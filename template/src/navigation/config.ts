@@ -1,8 +1,5 @@
-export enum RouteName {
-  Splash = 'Splash',
-  Login = 'Login',
-}
+import {StackNavigationOptions} from '@react-navigation/stack';
 
-export const defaultScreenOptions = {
+export const defaultScreenOptions: StackNavigationOptions = {
   headerShown: false,
 };
