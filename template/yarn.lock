@@ -8565,6 +8565,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"reactotron-core-client@patch:reactotron-core-client@npm%3A2.9.3#./.yarn/patches/reactotron-core-client-npm-2.9.3-3669949e7d.patch::locator=Boilerplate%40workspace%3A.":
+  version: 2.9.3
+  resolution: "reactotron-core-client@patch:reactotron-core-client@npm%3A2.9.3#./.yarn/patches/reactotron-core-client-npm-2.9.3-3669949e7d.patch::version=2.9.3&hash=f276d7&locator=Boilerplate%40workspace%3A."
+  dependencies:
+    reactotron-core-contract: 0.2.3
+  checksum: a1f45cca12259c6b5425836a4ebfe54cc9e16c5f90e1f2c11922efc381185fb0414a82f640562c8f46c57125deea04c653c197473e79a561b000745df8ff4c89
+  languageName: node
+  linkType: hard
+
 "reactotron-core-contract@npm:0.2.3":
   version: 0.2.3
   resolution: "reactotron-core-contract@npm:0.2.3"
