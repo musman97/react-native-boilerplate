@@ -4,59 +4,20 @@ import {
   resetGenericPassword,
   setGenericPassword,
 } from 'react-native-keychain';
-import {SuccessResult, FailureResult} from '~/types';
-import {isError} from '~/utils';
+import {AccessTokenKey, StorageKey} from './types';
+import {
+  createStorageSuccessResult,
+  formatErrorMessage,
+  handleError,
+} from './utils';
 
-const AccessTokenKey = 'user/access_token';
-export const storage = new MMKV();
-
-const GeneralErrorMessage = 'Unable to set/get value to/from Local storage';
-
-const formatErrorMessage = (key: string, type: 'set' | 'get', value?: any) =>
-  type === 'get'
-    ? `Unable to get for key: ${key}`
-    : `Unable to set value: ${value} for key: ${key}`;
-
-export type StorageSuccessResult<D> = SuccessResult<D, never>;
-
-export type StorageFailureResult<E = Error | undefined> = Omit<
-  FailureResult<undefined, E>,
-  'code'
->;
-
-const createStorageSuccessResult = <D = undefined>(
-  data?: D,
-): StorageSuccessResult<D> => ({
-  success: true,
-  failure: false,
-  cause: null,
-  value: data,
-});
-
-const createStorageFailureResult = <E>(
-  message?: string,
-  cause?: E,
-): StorageFailureResult<E> => ({
-  success: false,
-  failure: true,
-  value: null,
-  message: message ?? GeneralErrorMessage,
-  cause,
-});
-
-const handleError = (error: unknown, message: string): StorageFailureResult => {
-  if (isError(error)) {
-    return createStorageFailureResult(message, error);
-  } else {
-    return createStorageFailureResult(message);
-  }
-};
-
-enum StorageKey {
-  UserDetails = 'user/details',
-}
+const storage = new MMKV();
 
 export const StorageService = {
+  get storageInstance() {
+    return storage;
+  },
+
   Keys: StorageKey,
 
   /**
@@ -64,40 +25,61 @@ export const StorageService = {
    * https://github.com/oblador/react-native-keychain/issues/291#issuecomment-682460091
    */
 
-  async setAccessToken(accessToken: string) {
+  async setAccessToken(key: AccessTokenKey, token: string) {
     try {
-      await setGenericPassword('jwtToken', accessToken, {
-        service: AccessTokenKey,
+      await setGenericPassword('jwtToken', token, {
+        service: key,
       });
+
+      return createStorageSuccessResult();
     } catch (error) {
       return handleError(error, 'Unable to set access token to keychain');
     }
   },
-  async getAccessToken() {
+  async getAccessToken(key: AccessTokenKey) {
     try {
-      const creds = await getGenericPassword({service: AccessTokenKey});
+      const creds = await getGenericPassword({service: key});
 
       if (creds) {
-        return creds.password;
+        return createStorageSuccessResult(creds.password);
       } else {
-        return createStorageSuccessResult({data: null});
+        return createStorageSuccessResult(null);
       }
     } catch (error) {
       return handleError(error, 'Unable to get access token from keychain');
     }
   },
-  async clearAccessToken() {
+  async clearAccessToken(key: AccessTokenKey) {
     try {
-      const success = await resetGenericPassword({service: AccessTokenKey});
+      const success = await resetGenericPassword({service: key});
 
       if (!success) {
         throw new Error('Promise was resolved to false');
       }
+
+      return createStorageSuccessResult();
     } catch (error) {
       return handleError(error, 'Unable to clear access token from keychain');
     }
   },
 
+  setBoolean(key: StorageKey, value: boolean) {
+    try {
+      storage.set(key, value);
+      return createStorageSuccessResult();
+    } catch (error) {
+      return handleError(error, formatErrorMessage(key, 'set', value));
+    }
+  },
+  getBoolean(key: StorageKey) {
+    try {
+      const booleanFromStorage = storage.getBoolean(key);
+
+      return createStorageSuccessResult(booleanFromStorage);
+    } catch (error) {
+      return handleError(error, formatErrorMessage(key, 'get'));
+    }
+  },
   setString(key: StorageKey, value: string) {
     try {
       storage.set(key, value);
@@ -110,7 +92,7 @@ export const StorageService = {
     try {
       const stringFromStorage = storage.getString(key);
 
-      return createStorageSuccessResult({data: stringFromStorage});
+      return createStorageSuccessResult(stringFromStorage);
     } catch (error) {
       return handleError(error, formatErrorMessage(key, 'get'));
     }
@@ -131,9 +113,9 @@ export const StorageService = {
 
       if (objectJson) {
         const obj = JSON.parse(objectJson) as T;
-        return createStorageSuccessResult({data: obj});
+        return createStorageSuccessResult(obj);
       } else {
-        return createStorageSuccessResult({data: null});
+        return createStorageSuccessResult(null);
       }
     } catch (error) {
       return handleError(error, formatErrorMessage(key, 'get'));

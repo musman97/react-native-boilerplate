@@ -1,11 +1,11 @@
-/**
- * @format
- */
-
 import {AppRegistry} from 'react-native';
-import './ReactotronConfig';
 import 'react-native-gesture-handler';
 import App from './App';
 import {name as appName} from './app.json';
+
+if (__DEV__) {
+  require('./reacatron.config');
+  require('./ignoreWarns');
+}
 
 AppRegistry.registerComponent(appName, () => App);
