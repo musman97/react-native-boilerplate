@@ -1,4 +1,4 @@
-import {useMutation} from 'react-query';
+import {useMutation} from '@tanstack/react-query';
 import {ApiFailureResult, ApiService} from '~/core/api';
 import {User} from '~/core/models';
 
