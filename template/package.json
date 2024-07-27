@@ -9,7 +9,6 @@
     "lint": "eslint .",
     "format": "prettier --write '**/*.{js,ts,tsx,json}'",
     "typecheck": "tsc --noEmit",
-    "pod-install": "cd ios && bundle exec pod install ; cd ..",
     "android:bundle": "react-native bundle --dev false --platform android --entry-file index.js --bundle-output './android/app/src/main/assets/index.android.bundle' --assets-dest './android/app/src/main/res'",
     "fastlane": "bundle exec fastlane",
     "build:android_debug_apk": "yarn fastlane android debug_apk",
@@ -20,7 +19,6 @@
   "dependencies": {
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/stack": "^6.3.20",
-    "@tanstack/react-query": "^5.51.15",
     "axios": "^1.6.2",
     "react": "18.2.0",
     "react-native": "0.74.1",
@@ -31,6 +29,7 @@
     "react-native-safe-area-context": "^4.10.1",
     "react-native-screens": "^3.31.1",
     "react-native-vector-icons": "^10.0.2",
+    "react-query": "^3.39.3",
     "zustand": "^4.4.7"
   },
   "devDependencies": {
