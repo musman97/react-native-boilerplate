@@ -1,4 +1,4 @@
-import {AxiosError} from 'axios';
+import {AxiosError, AxiosResponse} from 'axios';
 import {SuccessResult, FailureResult} from '~/types';
 import {HttpMethod} from './constants';
 
@@ -8,6 +8,7 @@ type ApiRequestConfigBase = {
   withAuth: boolean;
   accessToken?: string;
   query?: Record<string, string>;
+  rejectOnError?: boolean;
 };
 
 export type ApiRequestConfig<D> = D extends undefined
@@ -16,16 +17,18 @@ export type ApiRequestConfig<D> = D extends undefined
 
 export type ApiSuccessResult<D> = SuccessResult<D, number> & {
   code: number;
+  meta: AxiosResponse;
+  __INTERNAL_SYMBOL: symbol;
 };
 
 export type ApiFailureResult = FailureResult<
   number,
   undefined | AxiosError | Error
->;
+> & {
+  __INTERNAL_SYMBOL: symbol;
+};
 
 export type ApiResult<R> = ApiSuccessResult<R> | ApiFailureResult;
-
-export type CustomErrorHandler = (error: unknown) => ApiFailureResult;
 
 export type GeneralApiResponseData = {message?: string};
 
@@ -34,3 +37,21 @@ export type GeneralApiResponse<D = unknown> = {
   message?: string;
   data?: D;
 };
+
+interface BaseCreateApiHandlerConfig {
+  baseUrl: string;
+  baseHeaders?: Record<string, string>;
+  rejectOnError?: boolean;
+}
+interface ConfigWithoutAuthHeaderInterceptor
+  extends BaseCreateApiHandlerConfig {
+  addAuthHeader: false;
+}
+interface ConfigWithAuthHeaderInterceptor extends BaseCreateApiHandlerConfig {
+  addAuthHeader: true;
+  authHeaderKey?: string;
+  getAuthHeaderValue?: () => string;
+}
+export type CreateApiHandlerConfig =
+  | ConfigWithoutAuthHeaderInterceptor
+  | ConfigWithAuthHeaderInterceptor;

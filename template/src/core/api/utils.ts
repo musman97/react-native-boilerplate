@@ -1,12 +1,10 @@
-import Axios, {AxiosRequestConfig} from 'axios';
-import {isError, isObjectNotEmpty} from '~/utils';
-import {ApiErrorMessage, NetworkErrorMessage} from './constants';
-import {
-  ApiFailureResult,
-  ApiRequestConfig,
-  ApiSuccessResult,
-  GeneralApiResponseData,
-} from './types';
+import {AxiosRequestConfig, AxiosResponse} from 'axios';
+import {isObjectNotEmpty} from '~/utils';
+import {ApiErrorMessage} from './constants';
+import {ApiFailureResult, ApiRequestConfig, ApiSuccessResult} from './types';
+
+export const SuccessResultSymbol = Symbol('success');
+export const FailureResultSymbol = Symbol('failure');
 
 export function createRequestConfig<D>(requestConfig: ApiRequestConfig<D>) {
   const axiosReqConfig: AxiosRequestConfig = {};
@@ -15,7 +13,7 @@ export function createRequestConfig<D>(requestConfig: ApiRequestConfig<D>) {
     axiosReqConfig.params = requestConfig.query;
   }
 
-  axiosReqConfig.withAuth = requestConfig.withAuth;
+  axiosReqConfig.withAuth = requestConfig.withAuth ?? true;
   axiosReqConfig.accessToken = requestConfig.accessToken;
 
   if (requestConfig.data && isObjectNotEmpty(requestConfig.data)) {
@@ -27,6 +25,7 @@ export function createRequestConfig<D>(requestConfig: ApiRequestConfig<D>) {
 
 export const createApiSuccessResult = <D>(
   data: D,
+  response: AxiosResponse,
   code: number = 200,
 ): ApiSuccessResult<D> => ({
   success: true,
@@ -34,6 +33,8 @@ export const createApiSuccessResult = <D>(
   code: code ?? 200,
   value: data,
   cause: null,
+  meta: response,
+  __INTERNAL_SYMBOL: SuccessResultSymbol,
 });
 
 export const createApiFailureResult = (
@@ -45,41 +46,12 @@ export const createApiFailureResult = (
   message: result?.message ?? ApiErrorMessage.General,
   code: result?.code ?? -1,
   cause: result?.cause,
+  __INTERNAL_SYMBOL: FailureResultSymbol,
 });
 
-export function handlerError(error: unknown): ApiFailureResult {
-  if (Axios.isAxiosError(error)) {
-    const failureResult = createApiFailureResult({cause: error});
-    const statusCode = error.response?.status;
-
-    /**
-     * Condition copied from
-     * https://github.com/infinitered/apisauce/blob/a9e015a1c6ae649dc521490c41d1054b091f6639/lib/apisauce.ts#L83
-     */
-    if (error.message === NetworkErrorMessage) {
-      failureResult.message = ApiErrorMessage.Network;
-      failureResult.code = 0;
-    } else if (statusCode) {
-      const data = error.response?.data as GeneralApiResponseData;
-      failureResult.message = data?.message || ApiErrorMessage.General;
-      failureResult.code = statusCode;
-    } else {
-      failureResult.message = ApiErrorMessage.UnableToSendRequest;
-      failureResult.code = -1;
-    }
-
-    return failureResult;
-  }
-  if (isError(error)) {
-    return createApiFailureResult({
-      message: ApiErrorMessage.UnableToSendRequest,
-      code: -1,
-      cause: error,
-    });
-  } else {
-    return createApiFailureResult({
-      message: ApiErrorMessage.UnableToSendRequest,
-      code: -1,
-    });
-  }
-}
+export const isApiSuccessResult = <D>(
+  value: any,
+): value is ApiSuccessResult<D> =>
+  value?.__INTERNAL_SYMBOL === SuccessResultSymbol;
+export const isApiFailureResult = (value: any): value is ApiFailureResult =>
+  value?.__INTERNAL_SYMBOL === FailureResultSymbol;

@@ -15,7 +15,7 @@ export const isNotDefined = (value: any) =>
   value === undefined || value === null;
 
 export const {positive: isObjectEmpty, negative: isObjectNotEmpty} =
-  createPredicatePair((obj: object) => {
+  createPredicatePair((obj: any) => {
     if (isNotDefined(obj)) {
       return true;
     }

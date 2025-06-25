@@ -10,6 +10,7 @@ export enum ApiErrorMessage {
   Network = 'Network error',
   RequestAlreadyExists = 'Request already exists',
   UnableToSendRequest = 'Unable to send request',
+  RequestCancelled = 'The api request was cancelled',
   BadRequest = 'The data entered is invalid',
 }
 
@@ -37,3 +38,12 @@ export const ApiEndpoints = {
 export const BaseUrl = BaseUrls[SelectedAppEnv];
 
 export const NetworkErrorMessage = 'Network Error';
+
+export const BaseHeaders = {
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
+};
+export const AuthorizationHeaderKey = 'Authorization';
+
+export const AbortReason = 'No auth header value';
+export const AbortErrorName = 'AbortError';
