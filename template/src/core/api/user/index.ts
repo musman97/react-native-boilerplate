@@ -1,10 +1,13 @@
-import {makeApiRequest} from '../common';
+import {ApiHandler} from '../apiHandler';
 import {ApiEndpoints, HttpMethod} from '../constants';
 import type {LoginApiResponse} from './types';
 
 export const UserApiService = {
   login: (email: string, password: string) =>
-    makeApiRequest<LoginApiResponse, {email: string; password: string}>({
+    ApiHandler.makeApiRequest<
+      LoginApiResponse,
+      {email: string; password: string}
+    >({
       endpoint: ApiEndpoints.User.Login,
       method: HttpMethod.Post,
       withAuth: false,
@@ -13,4 +16,4 @@ export const UserApiService = {
         password,
       },
     }),
-};
+} as const;

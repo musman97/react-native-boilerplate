@@ -4,6 +4,5 @@ import {User} from '~/core/models';
 
 export const useLogin = () =>
   useMutation<User, ApiFailureResult, {email: string; password: string}>({
-    mutationFn: ({email, password}) =>
-      ApiService.User.login(email, password).then(ApiService.handleApiResult),
+    mutationFn: ({email, password}) => ApiService.User.login(email, password),
   });
