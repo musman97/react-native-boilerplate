@@ -34,7 +34,7 @@ export const createApiSuccessResult = <D>(
   value: data,
   cause: null,
   meta: response,
-  __INTERNAL_SYMBOL: SuccessResultSymbol,
+  [SuccessResultSymbol]: true,
 });
 
 export const createApiFailureResult = (
@@ -46,12 +46,11 @@ export const createApiFailureResult = (
   message: result?.message ?? ApiErrorMessage.General,
   code: result?.code ?? -1,
   cause: result?.cause,
-  __INTERNAL_SYMBOL: FailureResultSymbol,
+  [FailureResultSymbol]: true,
 });
 
 export const isApiSuccessResult = <D>(
   value: any,
-): value is ApiSuccessResult<D> =>
-  value?.__INTERNAL_SYMBOL === SuccessResultSymbol;
+): value is ApiSuccessResult<D> => value?.[SuccessResultSymbol] === true;
 export const isApiFailureResult = (value: any): value is ApiFailureResult =>
-  value?.__INTERNAL_SYMBOL === FailureResultSymbol;
+  value?.[FailureResultSymbol] === true;
