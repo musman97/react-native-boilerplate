@@ -18,14 +18,14 @@ export type ApiRequestConfig<D> = D extends undefined
 export type ApiSuccessResult<D> = SuccessResult<D, number> & {
   code: number;
   meta: AxiosResponse;
-  __INTERNAL_SYMBOL: symbol;
+  [key: symbol]: true;
 };
 
 export type ApiFailureResult = FailureResult<
   number,
   undefined | AxiosError | Error
 > & {
-  __INTERNAL_SYMBOL: symbol;
+  [key: symbol]: true;
 };
 
 export type ApiResult<R> = ApiSuccessResult<R> | ApiFailureResult;
