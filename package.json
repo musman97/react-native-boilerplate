@@ -1,6 +1,6 @@
 {
     "name": "@musman97/react-native-boilerplate",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "description": "Muhamamd Usman's React Native Boilerplate with Zustand and React Query",
     "repository": {
         "type": "git",
