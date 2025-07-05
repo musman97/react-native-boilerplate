@@ -5,7 +5,7 @@ import {HttpMethod} from './constants';
 type ApiRequestConfigBase = {
   endpoint: string;
   method: HttpMethod;
-  withAuth: boolean;
+  withAuth?: boolean;
   accessToken?: string;
   query?: Record<string, string>;
   rejectOnError?: boolean;
