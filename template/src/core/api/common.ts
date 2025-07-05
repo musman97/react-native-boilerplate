@@ -143,8 +143,6 @@ export function createApiHandler(createConfig: CreateApiHandlerConfig) {
           failureResult.message = ApiErrorMessage.UnableToSendRequest;
           failureResult.code = -1;
         }
-
-        return failureResult;
       }
       if (isError(error)) {
         failureResult = failureResult = createApiFailureResult({
